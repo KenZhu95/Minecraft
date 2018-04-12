@@ -14,11 +14,12 @@
 #include <debuggl.h>
 #include "menger.h"
 #include "camera.h"
+#include "terrain_generator.h"
 
 int window_width = 800, window_height = 600;
 
 // VBO and VAO descriptors.
-enum { kVertexBuffer, kIndexBuffer, kNumVbos };
+enum { kVertexBuffer, kIndexBuffer, kTranslationBuffer, kTypeBuffer, kNumVbos };
 
 // These are our VAOs.
 enum { kGeometryVao, kNumVaos };
@@ -29,101 +30,21 @@ GLuint g_buffer_objects[kNumVaos][kNumVbos];  // These will store VBO descriptor
 // C++ 11 String Literal
 // See http://en.cppreference.com/w/cpp/language/string_literal
 const char* vertex_shader =
-R"zzz(#version 330 core
-in vec4 vertex_position;
-uniform mat4 view;
-uniform vec4 light_position;
-out vec4 vs_light_direction;
-void main()
-{
-	//gl_Position = view * vertex_position;
-	//vs_light_direction = -gl_Position + view * light_position;
-	gl_Position = vertex_position;
-	vs_light_direction = light_position - view * vertex_position;
-}
-)zzz";
+#include "shaders/default.vert"
+;
 
 
 const char* geometry_shader =
-R"zzz(#version 330 core
-layout (triangles) in;
-layout (triangle_strip, max_vertices = 3) out;
-uniform mat4 projection;
-uniform mat4 view;
-in vec4 vs_light_direction[];
-flat out vec4 normal;
-out vec4 light_direction;
-out vec4 world_position;
-void main()
-{
-	int n = 0;
-	//normal = vec4(0.0, 0.0, 1.0f, 0.0);
-	normal = vec4(normalize(cross(gl_in[1].gl_Position.xyz - gl_in[0].gl_Position.xyz, gl_in[2].gl_Position.xyz - gl_in[0].gl_Position.xyz)),1.0);
-	for (n = 0; n < gl_in.length(); n++) {
-		light_direction = vs_light_direction[n];
-		world_position = gl_in[n].gl_Position;
-		//gl_Position = projection * gl_in[n].gl_Position;
-		gl_Position = projection * view * gl_in[n].gl_Position;
-		EmitVertex();
-	}
-	EndPrimitive();
-}
-)zzz";
+#include "shaders/default.geom"
+;
 
 const char* fragment_shader =
-R"zzz(#version 330 core
-flat in vec4 normal;
-in vec4 light_direction;
-out vec4 fragment_color;
-
-struct normalColor{
-	vec3 normal;
-	vec4 color;
-};
-
-void main()
-{
-	vec4 color = vec4(0.5, 0.5, 0.5, 1.0);
-	color = vec4(abs(normal.x), abs(normal.y), abs(normal.z), 0.0);
-	float dot_nl = dot(normalize(light_direction), normalize(normal));
-	dot_nl = clamp(dot_nl, 0.0, 1.0);
-	//fragment_color = clamp(dot_nl * color, 0.0, 1.0);
-	fragment_color = color;
-}
-)zzz";
+#include "shaders/default.frag"
+;
 
 
 // FIXME: Implement shader effects with an alternative shader.
 
-
-void
-CreateTriangle(std::vector<glm::vec4>& vertices,
-        std::vector<glm::uvec3>& indices)
-{
-	vertices.push_back(glm::vec4(-0.5f, -0.5f, -0.5f, 1.0f));
-	vertices.push_back(glm::vec4(0.5f, -0.5f, -0.5f, 1.0f));
-	vertices.push_back(glm::vec4(0.0f, 0.5f, -0.5f, 1.0f));
-	indices.push_back(glm::uvec3(0, 1, 2));
-}
-
-// FIXME: Save geometry to OBJ file
-void
-SaveObj(const std::string& file,
-        const std::vector<glm::vec4>& vertices,
-        const std::vector<glm::uvec3>& indices)
-{
-	std::ofstream f;
-	f.open(file);
-	for (auto &vertex : vertices){
-		f << "v" << vertex.x << " " << vertex.y << " " << vertex.z << std::endl;
-	}
-
-	for (auto &index : indices){
-		f << "f" << (index.x + 1) << " " << (index.y + 1) << " " << (index.z + 1) << std::endl;
-	}
-
-	f.close();
-}
 
 void
 ErrorCallback(int error, const char* description)
@@ -134,7 +55,8 @@ ErrorCallback(int error, const char* description)
 std::shared_ptr<Menger> g_menger;
 Camera g_camera;
 bool FPSMode = true;
-bool if_save = false;
+bool if_gravity = true;
+TerrainGenerator terrain;
 
 void
 KeyCallback(GLFWwindow* window,
@@ -150,51 +72,46 @@ KeyCallback(GLFWwindow* window,
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	else if (key == GLFW_KEY_S && mods == GLFW_MOD_CONTROL && action == GLFW_RELEASE) {
 		// FIXME: save geometry to OBJ
-		if_save = true;
-		//SaveObj("geometry.obj", obj_vertices, obj_faces);
 		
+	} else if (key == GLFW_KEY_S && mods == GLFW_MOD_CONTROL && action == GLFW_RELEASE) {
+		if_gravity = !if_gravity;
 	} else if (key == GLFW_KEY_W && action != GLFW_RELEASE) {
 		// FIXME: WASD
 		g_camera.forward_back(1.0);
+		g_camera.is_move = true;
 	} else if (key == GLFW_KEY_S && action != GLFW_RELEASE && mods!= GLFW_MOD_CONTROL) {
 		g_camera.forward_back(-1.0);
+		g_camera.is_move = true;
 	} else if (key == GLFW_KEY_A && action != GLFW_RELEASE) {
 		g_camera.strafe(-1.0);
+		g_camera.is_move = true;
 	} else if (key == GLFW_KEY_D && action != GLFW_RELEASE) {
 		g_camera.strafe(1.0);
+		g_camera.is_move = true;
 	} else if (key == GLFW_KEY_LEFT && action != GLFW_RELEASE) {
 		// FIXME: Left Right Up and Down
 		g_camera.roll(-1.0);
+		g_camera.is_move = true;
 	} else if (key == GLFW_KEY_RIGHT && action != GLFW_RELEASE) {
 		g_camera.roll(1.0);
+		g_camera.is_move = true;
 	} else if (key == GLFW_KEY_DOWN && action != GLFW_RELEASE) {
 		g_camera.up_down(-1.0);
+		g_camera.is_move = true;
 	} else if (key == GLFW_KEY_UP && action != GLFW_RELEASE) {
 		g_camera.up_down(1.0);
+		g_camera.is_move = true;
 	} else if (key == GLFW_KEY_C && action != GLFW_RELEASE) {
 		// FIXME: FPS mode on/off
 		FPSMode = !FPSMode;
 	}
-	if (!g_menger)
-		return ; // 0-4 only available in Menger mode.
-	if (key == GLFW_KEY_0 && action != GLFW_RELEASE) {
-		// FIXME: Change nesting level of g_menger
-		// Note: GLFW_KEY_0 - 4 may not be continuous.
-		g_menger->set_nesting_level(0);
-	} else if (key == GLFW_KEY_1 && action != GLFW_RELEASE) {
-		g_menger->set_nesting_level(1);
-	} else if (key == GLFW_KEY_2 && action != GLFW_RELEASE) {
-		g_menger->set_nesting_level(2);
-	} else if (key == GLFW_KEY_3 && action != GLFW_RELEASE) {
-		g_menger->set_nesting_level(3);
-	} else if (key == GLFW_KEY_4 && action != GLFW_RELEASE) {
-		g_menger->set_nesting_level(4);
-	}
+
 }
 
 int g_current_button;
 bool g_mouse_pressed;
 bool g_prev_pressed;
+int INSTANCE_COUNT = 0;
 
 
 void
@@ -217,7 +134,6 @@ MousePosCallback(GLFWwindow* window, double mouse_x, double mouse_y)
 		g_camera.rotate(glm::vec2(diff.x, diff.y));
 	} else if (g_current_button == GLFW_MOUSE_BUTTON_RIGHT) {
 		// FIXME: right drag
-		std::cout << "Now: " << mouse_y << std::endl;
 		g_camera.zoom(10.0f * diff.y / window_height);
 	} else if (g_current_button == GLFW_MOUSE_BUTTON_MIDDLE) {
 		// FIXME: middle drag
@@ -269,9 +185,39 @@ int main(int argc, char* argv[])
 
 	std::vector<glm::vec4> obj_vertices;
 	std::vector<glm::uvec3> obj_faces;
+	std::vector<glm::vec4> translation_vectors;
+	std::vector<float> types;
+
+	terrain.getCenterFromEye(g_camera.getEyePosition());
+	//terrain.center_position = glm::vec3(1.0);
+	terrain.setSideLength(100.0f);
+	terrain.generateHeights();
+	INSTANCE_COUNT = 0;
+	for (const auto& height: terrain.heights) {
+		int h = (int)(height.y);
+		for (int i = 0; i <= h; i++) {
+			INSTANCE_COUNT++;
+			glm::vec4 translation = glm::vec4(0.0f);
+			translation.x = (float)height.x;
+			translation.y = (float)i;
+			translation.z = (float)height.z;
+			translation_vectors.emplace_back(translation);
+			if (i <= 10) {
+				types.emplace_back(0.0);
+			} else if (i <= 20) {
+				types.emplace_back(1.0);
+			} else {
+				types.emplace_back(2.0);
+			}
+
+		}
+	}
+	glm::vec3 eye_old = g_camera.getEyePosition();
+	g_camera.setEyePosition(glm::vec3(eye_old.x, terrain.heights[terrain.center_index].y + 2.75 , eye_old.z));
+
+	std::cout << translation_vectors.size() << std::endl;
 
     //FIXME: Create the geometry from a Menger object.
-    //CreateTriangle(obj_vertices, obj_faces);
 
 	g_menger->set_nesting_level(0);
 	g_menger->generate_geometry(obj_vertices, obj_faces);
@@ -284,8 +230,8 @@ int main(int argc, char* argv[])
 		min_bounds = glm::min(vert, min_bounds);
 		max_bounds = glm::max(vert, max_bounds);
 	}
-	std::cout << "min_bounds = " << glm::to_string(min_bounds) << "\n";
-	std::cout << "max_bounds = " << glm::to_string(max_bounds) << "\n";
+	// std::cout << "min_bounds = " << glm::to_string(min_bounds) << "\n";
+	// std::cout << "max_bounds = " << glm::to_string(max_bounds) << "\n";
 
 	// Setup our VAO array.
 	CHECK_GL_ERROR(glGenVertexArrays(kNumVaos, &g_array_objects[0]));
@@ -304,6 +250,28 @@ int main(int argc, char* argv[])
 				GL_STATIC_DRAW));
 	CHECK_GL_ERROR(glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0));
 	CHECK_GL_ERROR(glEnableVertexAttribArray(0));
+
+
+	// Setup translation data in a VBO.
+	CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, g_buffer_objects[kGeometryVao][kTranslationBuffer]));
+	// NOTE: We do not send anything right now, we just describe it to OpenGL.
+	CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER,
+				sizeof(float) * translation_vectors.size() * 4, translation_vectors.data(),
+				GL_STATIC_DRAW));
+	CHECK_GL_ERROR(glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, 0));
+	CHECK_GL_ERROR(glEnableVertexAttribArray(1));
+
+		// Setup translation data in a VBO.
+	CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, g_buffer_objects[kGeometryVao][kTypeBuffer]));
+	// NOTE: We do not send anything right now, we just describe it to OpenGL.
+	CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER,
+				sizeof(float) * types.size(), types.data(),
+				GL_STATIC_DRAW));
+	CHECK_GL_ERROR(glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 0, 0));
+	CHECK_GL_ERROR(glEnableVertexAttribArray(2));
+
+	CHECK_GL_ERROR(glVertexAttribDivisor(1,1));
+	CHECK_GL_ERROR(glVertexAttribDivisor(2,1));
 
 	// Setup element array buffer.
 	CHECK_GL_ERROR(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_buffer_objects[kGeometryVao][kIndexBuffer]));
@@ -353,6 +321,8 @@ int main(int argc, char* argv[])
 
 	// Bind attributes.
 	CHECK_GL_ERROR(glBindAttribLocation(program_id, 0, "vertex_position"));
+	CHECK_GL_ERROR(glBindAttribLocation(program_id, 1, "translation"));
+	CHECK_GL_ERROR(glBindAttribLocation(program_id, 2, "type"));
 	CHECK_GL_ERROR(glBindFragDataLocation(program_id, 0, "fragment_color"));
 	glLinkProgram(program_id);
 	CHECK_GL_PROGRAM_ERROR(program_id);
@@ -383,10 +353,6 @@ int main(int argc, char* argv[])
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glDepthFunc(GL_LESS);
 
-		if (if_save) {
-			SaveObj("geometry.obj", obj_vertices, obj_faces);
-			if_save = false;
-		}
 
 		// Switch to the Geometry VAO.
 		CHECK_GL_ERROR(glBindVertexArray(g_array_objects[kGeometryVao]));
@@ -400,6 +366,50 @@ int main(int argc, char* argv[])
 			// FIXME: Upload your vertex data here.
 			CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, g_buffer_objects[kGeometryVao][kVertexBuffer]));
 			CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * obj_vertices.size() * 4, &obj_vertices[0], GL_STATIC_DRAW));
+		}
+
+		if (g_camera.is_move) {
+
+			terrain.getCenterFromEye(g_camera.getEyePosition());
+			//terrain.center_position = glm::vec3(1.0);
+			terrain.generateHeights();
+			INSTANCE_COUNT = 0;
+			translation_vectors.clear();
+			types.clear();
+			for (const auto& height: terrain.heights) {
+				int h = (int)(height.y);
+				for (int i = 0; i <= h; i++) {
+					INSTANCE_COUNT++;
+					glm::vec4 translation = glm::vec4(0.0f);
+					translation.x = (float)height.x;
+					translation.y = (float)i;
+					translation.z = (float)height.z;
+					translation_vectors.emplace_back(translation);
+					if (i <= 10) {
+						types.emplace_back(0.0);
+					} else if (i <= 20) {
+						types.emplace_back(1.0);
+					} else {
+						types.emplace_back(2.0);
+					}
+
+				}
+			}
+			eye_old = g_camera.getEyePosition();
+			std::cout << eye_old.x << std::endl;
+			g_camera.setEyePosition(glm::vec3(eye_old.x, terrain.heights[terrain.center_index].y + 2.75 , eye_old.z));
+			CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, g_buffer_objects[kGeometryVao][kTranslationBuffer]));
+			// NOTE: We do not send anything right now, we just describe it to OpenGL.
+			CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER,
+				sizeof(float) * translation_vectors.size() * 4, translation_vectors.data(),
+				GL_STATIC_DRAW));
+			CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, g_buffer_objects[kGeometryVao][kTypeBuffer]));
+			// NOTE: We do not send anything right now, we just describe it to OpenGL.
+			CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER,
+				sizeof(float) * types.size(), types.data(),
+				GL_STATIC_DRAW));
+
+			g_camera.is_move = false;
 		}
 
 		// Compute the projection matrix.
@@ -422,7 +432,8 @@ int main(int argc, char* argv[])
 		CHECK_GL_ERROR(glUniform4fv(light_position_location, 1, &light_position[0]));
 
 		// Draw our triangles.
-		CHECK_GL_ERROR(glDrawElements(GL_TRIANGLES, obj_faces.size() * 3, GL_UNSIGNED_INT, 0));
+		//CHECK_GL_ERROR(glDrawElements(GL_TRIANGLES, obj_faces.size() * 3, GL_UNSIGNED_INT, 0));
+		CHECK_GL_ERROR(glDrawElementsInstanced(GL_TRIANGLES, obj_faces.size() * 3, GL_UNSIGNED_INT, 0, INSTANCE_COUNT));
 
 		// FIXME: Render the floor
 		// Note: What you need to do is

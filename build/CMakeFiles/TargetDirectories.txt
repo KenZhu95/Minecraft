@@ -1,0 +1,6 @@
+/v/filer5b/tmpclass/kenzhu/CG/Minecraft/build/CMakeFiles/edit_cache.dir
+/v/filer5b/tmpclass/kenzhu/CG/Minecraft/build/CMakeFiles/rebuild_cache.dir
+/v/filer5b/tmpclass/kenzhu/CG/Minecraft/build/CMakeFiles/utgraphicsutil.dir
+/v/filer5b/tmpclass/kenzhu/CG/Minecraft/build/src/CMakeFiles/rebuild_cache.dir
+/v/filer5b/tmpclass/kenzhu/CG/Minecraft/build/src/CMakeFiles/edit_cache.dir
+/v/filer5b/tmpclass/kenzhu/CG/Minecraft/build/src/CMakeFiles/minecraft.dir

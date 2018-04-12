@@ -17,8 +17,20 @@ public:
 	void up_down(float direction);
 	float mouse_x_ = 0.0f;
 	float mouse_y_ = 0.0f;
+	bool is_move = false;
+	glm::vec3 getEyePosition() {
+		return eye_;
+	}
+
+	glm::vec3 getCenterPosition() {
+		return eye_ + camera_distance_ * look_;
+	}
+
+	void setEyePosition(glm::vec3 eye_new) {
+		eye_ = eye_new;
+	}
 private:
-	float camera_distance_ = 3.0;
+	float camera_distance_ = 10.0;
 	glm::vec3 look_ = glm::vec3(0.0f, 0.0f, -1.0f);
 	glm::vec3 up_ = glm::vec3(0.0f, 1.0, 0.0f);
 	glm::vec3 eye_ = glm::vec3(0.0f, 0.0f, camera_distance_);

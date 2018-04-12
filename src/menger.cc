@@ -17,7 +17,7 @@ Menger::~Menger()
 void
 Menger::set_nesting_level(int level)
 {
-	nesting_level_ = level;
+	nesting_level_ = 0;
 	dirty_ = true;
 }
 
@@ -43,48 +43,48 @@ void Menger::generate_geometry(std::vector<glm::vec4>& obj_vertices,
 		return;
 	}
 
-	std::vector<glm::vec3> min_vertices;
-	min_vertices.emplace_back(this->min_bound);
+	// std::vector<glm::vec3> min_vertices;
+	// min_vertices.emplace_back(this->min_bound);
 
-	for (int i = 0; i < nesting_level_; i++){
-		glm::vec3 diff = (max_bound - min_bound) * float(1.0f / pow(3.0f, i+1));
-		glm::vec3 x_diff = glm::vec3(diff.x, 0.0, 0.0);
-		glm::vec3 y_diff = glm::vec3(0.0, diff.y, 0.0);
-		glm::vec3 z_diff = glm::vec3(0.0, 0.0, diff.z);
+	// for (int i = 0; i < nesting_level_; i++){
+	// 	glm::vec3 diff = (max_bound - min_bound) * float(1.0f / pow(3.0f, i+1));
+	// 	glm::vec3 x_diff = glm::vec3(diff.x, 0.0, 0.0);
+	// 	glm::vec3 y_diff = glm::vec3(0.0, diff.y, 0.0);
+	// 	glm::vec3 z_diff = glm::vec3(0.0, 0.0, diff.z);
 
-		std::vector<glm::vec3> sub_cubes_min;
-		sub_cubes_min = min_vertices;
-		min_vertices.clear();
+	// 	std::vector<glm::vec3> sub_cubes_min;
+	// 	sub_cubes_min = min_vertices;
+	// 	min_vertices.clear();
 
-		for (glm::vec3 sub_cube : sub_cubes_min){
-			min_vertices.emplace_back(sub_cube);
-			min_vertices.emplace_back(sub_cube + x_diff);
-			min_vertices.emplace_back(sub_cube + x_diff * 2.0f);
-			min_vertices.emplace_back(sub_cube + z_diff);
-			min_vertices.emplace_back(sub_cube + z_diff + x_diff * 2.0f);
-			min_vertices.emplace_back(sub_cube + z_diff * 2.0f);
-			min_vertices.emplace_back(sub_cube + z_diff * 2.0f + x_diff);
-			min_vertices.emplace_back(sub_cube + z_diff * 2.0f + x_diff * 2.0f);
-			min_vertices.emplace_back(sub_cube + y_diff);
-			min_vertices.emplace_back(sub_cube + y_diff + x_diff * 2.0f);
-			min_vertices.emplace_back(sub_cube + y_diff + z_diff * 2.0f);
-			min_vertices.emplace_back(sub_cube + y_diff + z_diff * 2.0f + x_diff * 2.0f);
-			min_vertices.emplace_back(sub_cube + y_diff * 2.0f);
-			min_vertices.emplace_back(sub_cube + y_diff * 2.0f + x_diff);
-			min_vertices.emplace_back(sub_cube + y_diff * 2.0f + x_diff * 2.0f);
-			min_vertices.emplace_back(sub_cube + y_diff * 2.0f + z_diff);
-			min_vertices.emplace_back(sub_cube + y_diff * 2.0f + z_diff + x_diff * 2.0f);
-			min_vertices.emplace_back(sub_cube + y_diff * 2.0f + z_diff * 2.0f);
-			min_vertices.emplace_back(sub_cube + y_diff * 2.0f + z_diff * 2.0f + x_diff);
-			min_vertices.emplace_back(sub_cube + y_diff * 2.0f + z_diff * 2.0f + x_diff * 2.0f);
+	// 	for (glm::vec3 sub_cube : sub_cubes_min){
+	// 		min_vertices.emplace_back(sub_cube);
+	// 		min_vertices.emplace_back(sub_cube + x_diff);
+	// 		min_vertices.emplace_back(sub_cube + x_diff * 2.0f);
+	// 		min_vertices.emplace_back(sub_cube + z_diff);
+	// 		min_vertices.emplace_back(sub_cube + z_diff + x_diff * 2.0f);
+	// 		min_vertices.emplace_back(sub_cube + z_diff * 2.0f);
+	// 		min_vertices.emplace_back(sub_cube + z_diff * 2.0f + x_diff);
+	// 		min_vertices.emplace_back(sub_cube + z_diff * 2.0f + x_diff * 2.0f);
+	// 		min_vertices.emplace_back(sub_cube + y_diff);
+	// 		min_vertices.emplace_back(sub_cube + y_diff + x_diff * 2.0f);
+	// 		min_vertices.emplace_back(sub_cube + y_diff + z_diff * 2.0f);
+	// 		min_vertices.emplace_back(sub_cube + y_diff + z_diff * 2.0f + x_diff * 2.0f);
+	// 		min_vertices.emplace_back(sub_cube + y_diff * 2.0f);
+	// 		min_vertices.emplace_back(sub_cube + y_diff * 2.0f + x_diff);
+	// 		min_vertices.emplace_back(sub_cube + y_diff * 2.0f + x_diff * 2.0f);
+	// 		min_vertices.emplace_back(sub_cube + y_diff * 2.0f + z_diff);
+	// 		min_vertices.emplace_back(sub_cube + y_diff * 2.0f + z_diff + x_diff * 2.0f);
+	// 		min_vertices.emplace_back(sub_cube + y_diff * 2.0f + z_diff * 2.0f);
+	// 		min_vertices.emplace_back(sub_cube + y_diff * 2.0f + z_diff * 2.0f + x_diff);
+	// 		min_vertices.emplace_back(sub_cube + y_diff * 2.0f + z_diff * 2.0f + x_diff * 2.0f);
 
-		}
-	}
+	// 	}
+	// }
 
-	glm::vec3 diff_min = (max_bound - min_bound) * float(1.0f / pow(3.0f, nesting_level_));
-	for (auto it = min_vertices.begin(); it != min_vertices.end(); it++){
-		create_menger(obj_vertices, obj_faces, *it, *it + diff_min);
-	}
+	// glm::vec3 diff_min = (max_bound - min_bound) * float(1.0f / pow(3.0f, nesting_level_));
+	// for (auto it = min_vertices.begin(); it != min_vertices.end(); it++){
+	// 	create_menger(obj_vertices, obj_faces, *it, *it + diff_min);
+	// }
 
 }
 
