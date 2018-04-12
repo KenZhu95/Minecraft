@@ -16,12 +16,13 @@ public:
 	~TerrainGenerator();
 	glm::vec3 center_position;
 	float side_length;
-	float max_height = 20.0f;
+	float max_height = 30.0f;
 	void getCenterFromEye(glm::vec3 eye_center) {
 		center_position = glm::vec3(eye_center);
 	}
 	std::vector<glm::vec3> heights;
 	void generateHeights();
+	void generatePerlinHeights();
 	void setSideLength(float length) {
 		side_length = length;
 	}
