@@ -26,6 +26,7 @@ public:
 		side_length = length;
 	}
 	int center_index = 0;
+	void initialize();
 
 };
 
