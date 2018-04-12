@@ -16,7 +16,7 @@ public:
 	~TerrainGenerator();
 	glm::vec3 center_position;
 	float side_length;
-	float max_height = 30.0f;
+	float max_height = 10.0f;
 	void getCenterFromEye(glm::vec3 eye_center) {
 		center_position = glm::vec3(eye_center);
 	}

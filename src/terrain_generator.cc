@@ -10,45 +10,7 @@ TerrainGenerator::~TerrainGenerator() {
 
 }
 
-void TerrainGenerator::generateHeights() {
-	heights.clear();
-	int x_min = floor(center_position.x - side_length);
-	int x_max = floor(center_position.x + side_length);
-	int z_min = floor(center_position.z - side_length);
-	int z_max = floor(center_position.z + side_length);
-	for (int x = x_min; x <= x_max; x++) {
-		for (int z = z_min; z <= z_max; z++) {
-			double frac = (double)(x - x_min) / (side_length);
-			double h = (std::sin(pi * frac)+1) * max_height;
-			int top_height = floor(h);
-			heights.emplace_back(glm::vec3(x, top_height, z));
-			if (x == floor(center_position.x) && z == floor(center_position.z)) {
-				center_index = heights.size() - 1;
-			}
-		}
-	}
-}
-
-void TerrainGenerator::generatePerlinHeights() {
-	heights.clear();
-	int x_min = floor(center_position.x - side_length);
-	int x_max = floor(center_position.x + side_length);
-	int z_min = floor(center_position.z - side_length);
-	int z_max = floor(center_position.z + side_length);
-	for (int x = x_min; x <= x_max; x++) {
-		for (int z = z_min; z <= z_max; z++) {
-			double frac = (double)(x - x_min) / (side_length);
-			double h = (noise((float)x, (float)y)) * max_height;
-			int top_height = floor(h);
-			heights.emplace_back(glm::vec3(x, top_height, z));
-			if (x == floor(center_position.x) && z == floor(center_position.z)) {
-				center_index = heights.size() - 1;
-			}
-		}
-	}
-}
-
-static int const size = 512;
+static int const size = 256;
 static int const mask = size-1;
 int perm[size];
 float grads_x[size], grads_y[size];
@@ -80,8 +42,50 @@ float noise(float x, float y) {
 	for (int grid_y = cell_y; grid_y <= cell_y + 1; ++grid_y) {
 		for (int grid_x = cell_x; grid_x <= cell_x + 1; ++grid_x) {
 			int hash = perm[(perm[grid_x & mask] + grid_y) & mask];
-			result += surflet(x - grid_x - grid_y, grads_x[hash], grads_y[hash]);
+			result += surflet(x - grid_x, y - grid_y, grads_x[hash], grads_y[hash]);
 		}
 	}
+	std::cout << result << std::endl;
 	return result;
+	
+}
+
+
+
+void TerrainGenerator::generateHeights() {
+	heights.clear();
+	int x_min = floor(center_position.x - side_length);
+	int x_max = floor(center_position.x + side_length);
+	int z_min = floor(center_position.z - side_length);
+	int z_max = floor(center_position.z + side_length);
+	for (int x = x_min; x <= x_max; x++) {
+		for (int z = z_min; z <= z_max; z++) {
+			double frac = (double)(x - x_min) / (side_length);
+			double h = (std::sin(pi * frac)+1) * max_height;
+			int top_height = floor(h);
+			heights.emplace_back(glm::vec3(x, top_height, z));
+			if (x == floor(center_position.x) && z == floor(center_position.z)) {
+				center_index = heights.size() - 1;
+			}
+		}
+	}
+}
+
+void TerrainGenerator::generatePerlinHeights() {
+	heights.clear();
+	int x_min = floor(center_position.x - side_length);
+	int x_max = floor(center_position.x + side_length);
+	int z_min = floor(center_position.z - side_length);
+	int z_max = floor(center_position.z + side_length);
+	for (int x = x_min; x <= x_max; x++) {
+		for (int z = z_min; z <= z_max; z++) {
+			double h = (noise(((float)x/10.0), ((float)z/10.0)) + 1) * max_height;
+			int top_height = floor(h);
+			heights.emplace_back(glm::vec3(x, top_height, z));
+			if (x == floor(center_position.x) && z == floor(center_position.z)) {
+				center_index = heights.size() - 1;
+			}
+			//std::cout << h << std::endl;
+		}
+	}
 }

@@ -188,13 +188,15 @@ int main(int argc, char* argv[])
 	std::vector<glm::vec4> translation_vectors;
 	std::vector<float> types;
 
-	terrain.getCenterFromEye(g_camera.getEyePosition());
+	terrain.getCenterFromEye(g_camera.getCenterPosition());
+	terrain.initialize();
 	//terrain.center_position = glm::vec3(1.0);
-	terrain.setSideLength(100.0f);
-	terrain.generateHeights();
+	terrain.setSideLength(30.0f);
+	terrain.generatePerlinHeights();
 	INSTANCE_COUNT = 0;
 	for (const auto& height: terrain.heights) {
 		int h = (int)(height.y);
+		//std::cout << h << std::endl;
 		for (int i = 0; i <= h; i++) {
 			INSTANCE_COUNT++;
 			glm::vec4 translation = glm::vec4(0.0f);
@@ -202,9 +204,9 @@ int main(int argc, char* argv[])
 			translation.y = (float)i;
 			translation.z = (float)height.z;
 			translation_vectors.emplace_back(translation);
-			if (i <= 10) {
+			if (i <= 6) {
 				types.emplace_back(0.0);
-			} else if (i <= 20) {
+			} else if (i <= 10) {
 				types.emplace_back(1.0);
 			} else {
 				types.emplace_back(2.0);
@@ -213,9 +215,9 @@ int main(int argc, char* argv[])
 		}
 	}
 	glm::vec3 eye_old = g_camera.getEyePosition();
-	g_camera.setEyePosition(glm::vec3(eye_old.x, terrain.heights[terrain.center_index].y + 2.75 , eye_old.z));
+	//g_camera.setEyePosition(glm::vec3(eye_old.x, terrain.heights[terrain.center_index].y + 2.75 , eye_old.z));
 
-	std::cout << translation_vectors.size() << std::endl;
+	//std::cout << translation_vectors.size() << std::endl;
 
     //FIXME: Create the geometry from a Menger object.
 
@@ -370,9 +372,9 @@ int main(int argc, char* argv[])
 
 		if (g_camera.is_move) {
 
-			terrain.getCenterFromEye(g_camera.getEyePosition());
+			//terrain.getCenterFromEye(g_camera.getCenterPosition());
 			//terrain.center_position = glm::vec3(1.0);
-			terrain.generateHeights();
+			terrain.generatePerlinHeights();
 			INSTANCE_COUNT = 0;
 			translation_vectors.clear();
 			types.clear();
@@ -385,9 +387,9 @@ int main(int argc, char* argv[])
 					translation.y = (float)i;
 					translation.z = (float)height.z;
 					translation_vectors.emplace_back(translation);
-					if (i <= 10) {
+					if (i <= 6) {
 						types.emplace_back(0.0);
-					} else if (i <= 20) {
+					} else if (i <= 10) {
 						types.emplace_back(1.0);
 					} else {
 						types.emplace_back(2.0);
@@ -396,8 +398,8 @@ int main(int argc, char* argv[])
 				}
 			}
 			eye_old = g_camera.getEyePosition();
-			std::cout << eye_old.x << std::endl;
-			g_camera.setEyePosition(glm::vec3(eye_old.x, terrain.heights[terrain.center_index].y + 2.75 , eye_old.z));
+			//std::cout << eye_old.x << std::endl;
+			//g_camera.setEyePosition(glm::vec3(eye_old.x, terrain.heights[terrain.center_index].y + 2.75 , eye_old.z));
 			CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, g_buffer_objects[kGeometryVao][kTranslationBuffer]));
 			// NOTE: We do not send anything right now, we just describe it to OpenGL.
 			CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER,
