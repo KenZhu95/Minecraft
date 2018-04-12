@@ -185,6 +185,7 @@ int main(int argc, char* argv[])
 
 	std::vector<glm::vec4> obj_vertices;
 	std::vector<glm::uvec3> obj_faces;
+	std::vector<float> obj_divis;
 	std::vector<glm::vec4> translation_vectors;
 	std::vector<float> types;
 
@@ -204,9 +205,9 @@ int main(int argc, char* argv[])
 			translation.y = (float)i;
 			translation.z = (float)height.z;
 			translation_vectors.emplace_back(translation);
-			if (i <= 6) {
+			if (i <= 12) {
 				types.emplace_back(0.0);
-			} else if (i <= 10) {
+			} else if (i <= 18) {
 				types.emplace_back(1.0);
 			} else {
 				types.emplace_back(2.0);
@@ -222,7 +223,7 @@ int main(int argc, char* argv[])
     //FIXME: Create the geometry from a Menger object.
 
 	g_menger->set_nesting_level(0);
-	g_menger->generate_geometry(obj_vertices, obj_faces);
+	g_menger->generate_geometry(obj_vertices, obj_faces, obj_divis);
 	g_menger->set_clean();
 
 
@@ -362,7 +363,8 @@ int main(int argc, char* argv[])
 		if (g_menger && g_menger->is_dirty()) {
 			obj_vertices.clear();
 			obj_faces.clear();
-			g_menger->generate_geometry(obj_vertices, obj_faces);
+			obj_divis.clear();
+			g_menger->generate_geometry(obj_vertices, obj_faces, obj_divis);
 			g_menger->set_clean();
 
 			// FIXME: Upload your vertex data here.
@@ -387,9 +389,9 @@ int main(int argc, char* argv[])
 					translation.y = (float)i;
 					translation.z = (float)height.z;
 					translation_vectors.emplace_back(translation);
-					if (i <= 6) {
+					if (i <= 15) {
 						types.emplace_back(0.0);
-					} else if (i <= 10) {
+					} else if (i <= 20) {
 						types.emplace_back(1.0);
 					} else {
 						types.emplace_back(2.0);

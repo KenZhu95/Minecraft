@@ -13,7 +13,8 @@ public:
 	bool is_dirty() const;
 	void set_clean();
 	void generate_geometry(std::vector<glm::vec4>& obj_vertices,
-	                       std::vector<glm::uvec3>& obj_faces) const;
+	                       std::vector<glm::uvec3>& obj_faces,
+	                       std::vector<float>& obj_divis) const;
 private:
 	int nesting_level_ = 0;
 	bool dirty_ = false;
@@ -21,6 +22,7 @@ private:
 	glm::vec3 max_bound = glm::vec3(0.5f, 0.5f, 0.5f);
 	void create_menger(std::vector<glm::vec4>& obj_vertices,
 	                   std::vector<glm::uvec3>& obj_faces,
+	                   std::vector<float>& obj_divis,
 				       glm::vec3 min, glm::vec3 max) const;
 };
 
