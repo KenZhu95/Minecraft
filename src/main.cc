@@ -205,9 +205,9 @@ int main(int argc, char* argv[])
 			translation.y = (float)i;
 			translation.z = (float)height.z;
 			translation_vectors.emplace_back(translation);
-			if (i <= 12) {
+			if (i <= 5) {
 				types.emplace_back(0.0);
-			} else if (i <= 18) {
+			} else if (i <= 10) {
 				types.emplace_back(1.0);
 			} else {
 				types.emplace_back(2.0);
@@ -335,7 +335,7 @@ int main(int argc, char* argv[])
 	CHECK_GL_ERROR(glBindAttribLocation(program_id, 0, "vertex_position"));
 	CHECK_GL_ERROR(glBindAttribLocation(program_id, 1, "translation"));
 	CHECK_GL_ERROR(glBindAttribLocation(program_id, 2, "type"));
-	CHECK_GL_ERROR(glBindAttribLocation(program_id, 2, "division"));
+	CHECK_GL_ERROR(glBindAttribLocation(program_id, 3, "division"));
 	CHECK_GL_ERROR(glBindFragDataLocation(program_id, 0, "fragment_color"));
 	glLinkProgram(program_id);
 	CHECK_GL_PROGRAM_ERROR(program_id);
@@ -399,9 +399,9 @@ int main(int argc, char* argv[])
 					translation.y = (float)i;
 					translation.z = (float)height.z;
 					translation_vectors.emplace_back(translation);
-					if (i <= 15) {
+					if (i <= 5) {
 						types.emplace_back(0.0);
-					} else if (i <= 20) {
+					} else if (i <= 10) {
 						types.emplace_back(1.0);
 					} else {
 						types.emplace_back(2.0);
@@ -421,6 +421,12 @@ int main(int argc, char* argv[])
 			// NOTE: We do not send anything right now, we just describe it to OpenGL.
 			CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER,
 				sizeof(float) * types.size(), types.data(),
+				GL_STATIC_DRAW));
+
+			CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, g_buffer_objects[kGeometryVao][kDivisionBuffer]));
+			// NOTE: We do not send anything right now, we just describe it to OpenGL.
+			CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER,
+				sizeof(float) * obj_divis.size(), obj_divis.data(),
 				GL_STATIC_DRAW));
 
 			g_camera.is_move = false;

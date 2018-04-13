@@ -79,7 +79,7 @@ void TerrainGenerator::generatePerlinHeights() {
 	int z_max = floor(center_position.z + side_length);
 	for (int x = x_min; x <= x_max; x++) {
 		for (int z = z_min; z <= z_max; z++) {
-			double h = (noise(((float)x/10.0), ((float)z/10.0)) + 1) * max_height;
+			double h = glm::max((noise(((float)x/10.0), ((float)z/10.0)) + 0.5),0.0) * max_height;
 			int top_height = floor(h);
 			heights.emplace_back(glm::vec3(x, top_height, z));
 			if (x == floor(center_position.x) && z == floor(center_position.z)) {
