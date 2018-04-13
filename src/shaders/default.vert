@@ -1,12 +1,14 @@
 R"zzz(#version 330 core
 in vec4 vertex_position;
 in vec4 translation;
+in float division;
 in float type;
 uniform mat4 view;
 uniform vec4 light_position;
 out vec4 vs_light_direction;
 out vec3 v_position;
 out vec4 color;
+out float divis;
 void main()
 {
 	//gl_Position = vertex_position;
@@ -26,5 +28,6 @@ void main()
 	} else {
 		color = vec4(0.0, 0.0, 1.0, 0.0);
 	}
+	divis = division;
 }
 )zzz";

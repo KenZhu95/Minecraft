@@ -19,7 +19,7 @@
 int window_width = 800, window_height = 600;
 
 // VBO and VAO descriptors.
-enum { kVertexBuffer, kIndexBuffer, kTranslationBuffer, kTypeBuffer, kNumVbos };
+enum { kVertexBuffer, kIndexBuffer, kTranslationBuffer, kTypeBuffer, kDivisionBuffer, kNumVbos };
 
 // These are our VAOs.
 enum { kGeometryVao, kNumVaos };
@@ -276,6 +276,15 @@ int main(int argc, char* argv[])
 	CHECK_GL_ERROR(glVertexAttribDivisor(1,1));
 	CHECK_GL_ERROR(glVertexAttribDivisor(2,1));
 
+	// Setup division data in a VBO.
+	CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, g_buffer_objects[kGeometryVao][kDivisionBuffer]));
+	// NOTE: We do not send anything right now, we just describe it to OpenGL.
+	CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER,
+				sizeof(float) * obj_divis.size(), obj_divis.data(),
+				GL_STATIC_DRAW));
+	CHECK_GL_ERROR(glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 0, 0));
+	CHECK_GL_ERROR(glEnableVertexAttribArray(3));
+
 	// Setup element array buffer.
 	CHECK_GL_ERROR(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_buffer_objects[kGeometryVao][kIndexBuffer]));
 	CHECK_GL_ERROR(glBufferData(GL_ELEMENT_ARRAY_BUFFER,
@@ -326,6 +335,7 @@ int main(int argc, char* argv[])
 	CHECK_GL_ERROR(glBindAttribLocation(program_id, 0, "vertex_position"));
 	CHECK_GL_ERROR(glBindAttribLocation(program_id, 1, "translation"));
 	CHECK_GL_ERROR(glBindAttribLocation(program_id, 2, "type"));
+	CHECK_GL_ERROR(glBindAttribLocation(program_id, 2, "division"));
 	CHECK_GL_ERROR(glBindFragDataLocation(program_id, 0, "fragment_color"));
 	glLinkProgram(program_id);
 	CHECK_GL_PROGRAM_ERROR(program_id);

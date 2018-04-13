@@ -88,60 +88,84 @@ Menger::create_menger(std::vector<glm::vec4>& obj_vertices,
 	obj_vertices.emplace_back(glm::vec4(max[0], min[1], min[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(min[0], max[1], min[2], 1.0f));
 	obj_divis.emplace_back(0.0);
+	obj_divis.emplace_back(0.0);
+	obj_divis.emplace_back(0.0);
 
 	obj_vertices.emplace_back(glm::vec4(max[0], max[1], min[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(min[0], max[1], min[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(max[0], min[1], min[2], 1.0f));
+	obj_divis.emplace_back(1.0);
+	obj_divis.emplace_back(1.0);
 	obj_divis.emplace_back(1.0);
 
 	obj_vertices.emplace_back(glm::vec4(max[0], min[1], min[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(max[0], min[1], max[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(max[0], max[1], min[2], 1.0f));
 	obj_divis.emplace_back(0.0);
+	obj_divis.emplace_back(0.0);
+	obj_divis.emplace_back(0.0);
 
 	obj_vertices.emplace_back(glm::vec4(max[0], max[1], max[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(max[0], max[1], min[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(max[0], min[1], max[2], 1.0f));
+	obj_divis.emplace_back(1.0);
+	obj_divis.emplace_back(1.0);
 	obj_divis.emplace_back(1.0);
 
 	obj_vertices.emplace_back(glm::vec4(min[0], min[1], max[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(max[0], min[1], max[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(min[0], max[1], max[2], 1.0f));
 	obj_divis.emplace_back(0.0);
+	obj_divis.emplace_back(0.0);
+	obj_divis.emplace_back(0.0);
 
 	obj_vertices.emplace_back(glm::vec4(max[0], max[1], max[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(min[0], max[1], max[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(max[0], min[1], max[2], 1.0f));
+	obj_divis.emplace_back(1.0);
+	obj_divis.emplace_back(1.0);
 	obj_divis.emplace_back(1.0);
 
 	obj_vertices.emplace_back(glm::vec4(min[0], min[1], min[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(min[0], min[1], max[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(min[0], max[1], min[2], 1.0f));
 	obj_divis.emplace_back(0.0);
+	obj_divis.emplace_back(0.0);
+	obj_divis.emplace_back(0.0);
 
 	obj_vertices.emplace_back(glm::vec4(min[0], max[1], max[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(min[0], max[1], min[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(min[0], min[1], max[2], 1.0f));
+	obj_divis.emplace_back(1.0);
+	obj_divis.emplace_back(1.0);
 	obj_divis.emplace_back(1.0);
 
 	obj_vertices.emplace_back(glm::vec4(min[0], min[1], min[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(max[0], min[1], min[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(min[0], min[1], max[2], 1.0f));
 	obj_divis.emplace_back(0.0);
+	obj_divis.emplace_back(0.0);
+	obj_divis.emplace_back(0.0);
 
 	obj_vertices.emplace_back(glm::vec4(max[0], min[1], max[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(min[0], min[1], max[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(max[0], min[1], min[2], 1.0f));
+	obj_divis.emplace_back(1.0);
+	obj_divis.emplace_back(1.0);
 	obj_divis.emplace_back(1.0);
 
 	obj_vertices.emplace_back(glm::vec4(min[0], max[1], min[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(max[0], max[1], min[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(min[0], max[1], max[2], 1.0f));
 	obj_divis.emplace_back(0.0);
+	obj_divis.emplace_back(0.0);
+	obj_divis.emplace_back(0.0);
 
 	obj_vertices.emplace_back(glm::vec4(max[0], max[1], max[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(min[0], max[1], max[2], 1.0f));
 	obj_vertices.emplace_back(glm::vec4(max[0], max[1], min[2], 1.0f));
+	obj_divis.emplace_back(1.0);
+	obj_divis.emplace_back(1.0);
 	obj_divis.emplace_back(1.0);
 
 

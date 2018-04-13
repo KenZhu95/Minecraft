@@ -5,6 +5,8 @@ uniform mat4 projection;
 uniform mat4 view;
 in vec4 vs_light_direction[];
 in vec4 color[];
+in float divis[];
+flat out float divi;
 flat out vec4 color_r;
 flat out vec4 normal;
 out vec4 light_direction;
@@ -28,6 +30,7 @@ void main()
 	heights = vec3(length1, length2, length3);
 
 	color_r = color[0];
+	divi = divis[0];
 
 	for (n = 0; n < gl_in.length(); n++) {
 		light_direction = vs_light_direction[n];

@@ -3,6 +3,7 @@ flat in vec4 normal;
 in vec4 light_direction;
 flat in float type;
 flat in vec4 color_r;
+flat in float divi;
 out vec4 fragment_color;
 
 void main()
