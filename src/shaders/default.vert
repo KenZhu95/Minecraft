@@ -22,11 +22,11 @@ void main()
 	v_position = vertex_p.xyz;
 	color = vec4(0.5, 0.5, 0.5, 1.0);
 	if (type <= 0.5) {
-		color = vec4(0.5, 0.5, 0.0, 0.0);
+		color = vec4(160.0, 82.0, 45.0, 0.0) / 255.0;
 	} else if (type <= 1.5) {
-		color = vec4(0.0, 1.0, 0.0, 0.0);
+		color = vec4(119.0, 136.0， 153.0 0.0) / 255.0;
 	} else {
-		color = vec4(0.0, 0.0, 1.0, 0.0);
+		color = vec4(142.0, 252.0, 0.0, 0.0) / 255.0;
 	}
 	divis = division;
 }
