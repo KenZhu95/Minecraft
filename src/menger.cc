@@ -55,14 +55,14 @@ Menger::create_menger(std::vector<glm::vec4>& obj_vertices,
 {
 	unsigned long v_num = obj_vertices.size();
 
-	// obj_vertices.emplace_back(glm::vec4(min[0], min[1], min[2], 1.0f));
-	// obj_vertices.emplace_back(glm::vec4(max[0], min[1], min[2], 1.0f));
-	// obj_vertices.emplace_back(glm::vec4(min[0], max[1], min[2], 1.0f));
-	// obj_vertices.emplace_back(glm::vec4(max[0], max[1], min[2], 1.0f));
-	// obj_vertices.emplace_back(glm::vec4(max[0], min[1], max[2], 1.0f));
-	// obj_vertices.emplace_back(glm::vec4(min[0], min[1], max[2], 1.0f));
-	// obj_vertices.emplace_back(glm::vec4(max[0], max[1], max[2], 1.0f));
-	// obj_vertices.emplace_back(glm::vec4(min[0], max[1], max[2], 1.0f));
+	// obj_vertices.emplace_back(glm::vec4(min[0], min[1], min[2], 1.0f)); 0
+	// obj_vertices.emplace_back(glm::vec4(max[0], min[1], min[2], 1.0f)); 1
+	// obj_vertices.emplace_back(glm::vec4(min[0], max[1], min[2], 1.0f)); 2
+	// obj_vertices.emplace_back(glm::vec4(max[0], max[1], min[2], 1.0f)); 3
+	// obj_vertices.emplace_back(glm::vec4(max[0], min[1], max[2], 1.0f)); 4
+	// obj_vertices.emplace_back(glm::vec4(min[0], min[1], max[2], 1.0f)); 5
+	// obj_vertices.emplace_back(glm::vec4(max[0], max[1], max[2], 1.0f)); 6
+	// obj_vertices.emplace_back(glm::vec4(min[0], max[1], max[2], 1.0f)); 7
 
 
 	// obj_faces.emplace_back(glm::uvec3(v_num, v_num + 1, v_num + 2));
@@ -171,7 +171,7 @@ Menger::create_menger(std::vector<glm::vec4>& obj_vertices,
 
 	obj_faces.emplace_back(glm::uvec3(v_num, v_num + 1, v_num + 2));
 	obj_faces.emplace_back(glm::uvec3(v_num + 3, v_num + 4, v_num + 5));
-	obj_faces.emplace_back(glm::uvec3(v_num = 6, v_num + 7, v_num + 8));
+	obj_faces.emplace_back(glm::uvec3(v_num + 6, v_num + 7, v_num + 8));
 	obj_faces.emplace_back(glm::uvec3(v_num + 9, v_num + 10, v_num + 11));
 	obj_faces.emplace_back(glm::uvec3(v_num + 12, v_num + 13, v_num + 14));
 	obj_faces.emplace_back(glm::uvec3(v_num + 15, v_num + 16, v_num + 17));

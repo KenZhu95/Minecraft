@@ -6,9 +6,10 @@ uniform mat4 view;
 in vec4 vs_light_direction[];
 in vec4 color[];
 in float divis[];
+in vec4 trans[];
+flat out vec4 tran;
 flat out float divi;
 flat out vec4 color_r;
-flat out vec4 normal;
 out vec4 light_direction;
 out vec4 world_position;
 out vec3 bary_coor;
@@ -16,8 +17,6 @@ flat out vec3 heights;
 void main()
 {
 	int n = 0;
-	//normal = vec4(0.0, 0.0, 1.0f, 0.0);
-	normal = vec4(normalize(cross(gl_in[1].gl_Position.xyz - gl_in[0].gl_Position.xyz, gl_in[2].gl_Position.xyz - gl_in[0].gl_Position.xyz)),1.0);
 	vec3 pos1 = gl_in[0].gl_Position.xyz;
 	vec3 pos2 = gl_in[1].gl_Position.xyz;
 	vec3 pos3 = gl_in[2].gl_Position.xyz;
@@ -31,6 +30,7 @@ void main()
 
 	color_r = color[0];
 	divi = divis[0];
+	tran = trans[0];
 
 	for (n = 0; n < gl_in.length(); n++) {
 		light_direction = vs_light_direction[n];

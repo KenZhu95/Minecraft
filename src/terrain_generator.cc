@@ -85,7 +85,6 @@ void TerrainGenerator::generatePerlinHeights() {
 			if (x == floor(center_position.x) && z == floor(center_position.z)) {
 				center_index = heights.size() - 1;
 			}
-			//std::cout << h << std::endl;
 		}
 	}
 }

@@ -9,6 +9,7 @@ out vec4 vs_light_direction;
 out vec3 v_position;
 out vec4 color;
 out float divis;
+out vec4 trans;
 
 void main()
 {
@@ -30,5 +31,6 @@ void main()
 		color = vec4(76.0, 153.0, 0.0, 0.0) / 255.0;
 	}
 	divis = division;
+	trans = translation;
 }
 )zzz";

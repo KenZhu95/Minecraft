@@ -189,7 +189,7 @@ int main(int argc, char* argv[])
 	std::vector<glm::vec4> translation_vectors;
 	std::vector<float> types;
 
-	terrain.getCenterFromEye(g_camera.getCenterPosition());
+	terrain.getCenterFromEye(g_camera.getEyePosition());
 	terrain.initialize();
 	//terrain.center_position = glm::vec3(1.0);
 	terrain.setSideLength(30.0f);
@@ -284,6 +284,7 @@ int main(int argc, char* argv[])
 				GL_STATIC_DRAW));
 	CHECK_GL_ERROR(glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 0, 0));
 	CHECK_GL_ERROR(glEnableVertexAttribArray(3));
+
 
 	// Setup element array buffer.
 	CHECK_GL_ERROR(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_buffer_objects[kGeometryVao][kIndexBuffer]));
@@ -384,7 +385,7 @@ int main(int argc, char* argv[])
 
 		if (g_camera.is_move) {
 
-			//terrain.getCenterFromEye(g_camera.getCenterPosition());
+			terrain.getCenterFromEye(g_camera.getCenterPosition());
 			//terrain.center_position = glm::vec3(1.0);
 			terrain.generatePerlinHeights();
 			INSTANCE_COUNT = 0;
@@ -411,7 +412,7 @@ int main(int argc, char* argv[])
 			}
 			eye_old = g_camera.getEyePosition();
 			//std::cout << eye_old.x << std::endl;
-			//g_camera.setEyePosition(glm::vec3(eye_old.x, terrain.heights[terrain.center_index].y + 2.75 , eye_old.z));
+			g_camera.setEyePosition(glm::vec3(eye_old.x, terrain.heights[terrain.center_index].y + 2.75 , eye_old.z));
 			CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, g_buffer_objects[kGeometryVao][kTranslationBuffer]));
 			// NOTE: We do not send anything right now, we just describe it to OpenGL.
 			CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER,
