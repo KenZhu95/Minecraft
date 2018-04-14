@@ -45,46 +45,47 @@ float noise(float x, float y) {
 			result += surflet(x - grid_x, y - grid_y, grads_x[hash], grads_y[hash]);
 		}
 	}
-	std::cout << result << std::endl;
 	return result;
 	
 }
 
-
-
-void TerrainGenerator::generateHeights() {
-	heights.clear();
-	int x_min = floor(center_position.x - side_length);
-	int x_max = floor(center_position.x + side_length);
-	int z_min = floor(center_position.z - side_length);
-	int z_max = floor(center_position.z + side_length);
-	for (int x = x_min; x <= x_max; x++) {
-		for (int z = z_min; z <= z_max; z++) {
-			double frac = (double)(x - x_min) / (side_length);
-			double h = (std::sin(pi * frac)+1) * max_height;
-			int top_height = floor(h);
-			heights.emplace_back(glm::vec3(x, top_height, z));
-			if (x == floor(center_position.x) && z == floor(center_position.z)) {
-				center_index = heights.size() - 1;
-			}
-		}
-	}
+float rand1(glm::vec2 co){
+    float a =  (sin(glm::dot(glm::vec2(co.x,co.y) ,glm::vec2(12.9898,78.233))) * 43758.5453);
+    return a - (float)floor(a);
 }
+
+
 
 void TerrainGenerator::generatePerlinHeights() {
 	heights.clear();
 	int x_min = floor(center_position.x - side_length);
-	int x_max = floor(center_position.x + side_length);
+	int x_max = floor(center_position.x - side_length) + 2 * side_length;
 	int z_min = floor(center_position.z - side_length);
-	int z_max = floor(center_position.z + side_length);
+	int z_max = floor(center_position.z - side_length) + 2 * side_length;
+	start_x = x_min;
+	start_z = z_min;
+	for (int i=0; i < 101; i++) {
+		for (int j=0; j < 101; j++) {
+			append_buffer[i][j] = 0;
+		}
+	}
 	for (int x = x_min; x <= x_max; x++) {
 		for (int z = z_min; z <= z_max; z++) {
 			double h = glm::max((noise(((float)x/10.0), ((float)z/10.0)) + 0.5),0.0) * max_height;
 			int top_height = floor(h);
-			heights.emplace_back(glm::vec3(x, top_height, z));
-			if (x == floor(center_position.x) && z == floor(center_position.z)) {
-				center_index = heights.size() - 1;
+			if (top_height < 2) {
+				top_height = 2;
 			}
+			if (top_height > 9) {
+				float r = rand1(glm::vec2((float)x, (float)z));
+				if (r > 0.95) {
+					top_height  += 2;
+					append_buffer[x-x_min][z-z_min] = 1;
+				}
+			}
+			heights.emplace_back(glm::vec3(x, top_height, z));
+			height_buffer[x-x_min][z-z_min] = top_height;
+			
 		}
 	}
 }

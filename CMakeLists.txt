@@ -8,6 +8,8 @@ ENDFOREACH(cmake)
 
 MESSAGE(STATUS "stdgl: ${stdgl_libraries}")
 
+FIND_PACKAGE(OpenGL REQUIRED)
+
 ADD_SUBDIRECTORY(src)
 
 IF (EXISTS ${CMAKE_SOURCE_DIR}/sln/CMakeLists.txt)

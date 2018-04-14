@@ -10,6 +10,7 @@ out vec3 v_position;
 out vec4 color;
 out float divis;
 out vec4 trans;
+out float type_0;
 
 void main()
 {
@@ -26,11 +27,17 @@ void main()
 	if (type <= 0.5) {
 		color = vec4(229.0, 160.0, 25.0, 0.0) / 255.0;
 	} else if (type <= 1.5) {
-		color = vec4(119.0, 136.0, 153.0, 0.0) / 255.0;
-	} else {
 		color = vec4(76.0, 153.0, 0.0, 0.0) / 255.0;
+	} else if (type <= 2.5) {
+		
+		color = vec4(119.0, 136.0, 153.0, 0.0) / 255.0;
+	} else if (type <= 3.5) {
+		color = vec4(64.0, 164.0, 223.0, 0.0) / 255.0;
+	} else {
+		color = vec4(83.0, 49.0, 24.0, 0.0) / 255.0;
 	}
 	divis = division;
 	trans = translation;
+	type_0 = type;
 }
 )zzz";

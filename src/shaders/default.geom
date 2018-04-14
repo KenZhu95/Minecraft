@@ -7,6 +7,8 @@ in vec4 vs_light_direction[];
 in vec4 color[];
 in float divis[];
 in vec4 trans[];
+in float type_0[];
+flat out float type_f;
 flat out vec4 tran;
 flat out float divi;
 flat out vec4 color_r;
@@ -31,6 +33,7 @@ void main()
 	color_r = color[0];
 	divi = divis[0];
 	tran = trans[0];
+	type_f = type_0[0];
 
 	for (n = 0; n < gl_in.length(); n++) {
 		light_direction = vs_light_direction[n];

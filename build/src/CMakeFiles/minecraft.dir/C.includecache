@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/v/filer5b/tmpclass/kenzhu/CG/Minecraft/src/tictoc.c
+stdint.h
+-
+tictoc.h
+/v/filer5b/tmpclass/kenzhu/CG/Minecraft/src/tictoc.h
+stdio.h
+-
+time.h
+-
+mach/mach_time.h
+-
+windows.h
+-
+Strsafe.h
+-
+
+/v/filer5b/tmpclass/kenzhu/CG/Minecraft/src/tictoc.h
+stdint.h
+-
+

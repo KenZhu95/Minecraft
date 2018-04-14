@@ -1,7 +1,7 @@
 R"zzz(#version 330 core
 in vec4 light_direction;
 in vec3 bary_coor;
-flat in float type;
+flat in float type_f;
 flat in vec4 color_r;
 flat in float divi;
 flat in vec4 tran;
@@ -63,7 +63,11 @@ void main()
 		uv_cor = vec2(1-bary_coor.y, 1-bary_coor.z);
 	}
 	float bb = noise(uv_cor.x * 10.0, uv_cor.y * 10.0, tran.xyz);
-
-	fragment_color = color_r * min((bb +0.3),1.0);
+	if (type_f <= 2.5 || type_f >=3.5) {
+		fragment_color = color_r * min((bb +0.3),1.0);
+	} else {
+		fragment_color = color_r * min((bb+0.8), 1.2);
+	}
+	
 }
 )zzz";

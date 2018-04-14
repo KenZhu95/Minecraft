@@ -29,11 +29,21 @@ public:
 	void setEyePosition(glm::vec3 eye_new) {
 		eye_ = eye_new;
 	}
-private:
+	bool is_forward = false;
+	bool is_back = false;
+	bool is_left = false;
+	bool is_right = false;
+	bool is_up = false;
+	bool is_down = false;
+	bool is_jump = false;
+	bool is_fall = false;
+
 	float camera_distance_ = 30.0;
 	glm::vec3 look_ = glm::vec3(0.0f, 0.0f, -1.0f);
 	glm::vec3 up_ = glm::vec3(0.0f, 1.0, 0.0f);
 	glm::vec3 eye_ = glm::vec3(0.0f, 0.0f, camera_distance_);
+	glm::vec3 origin_eye;
+private:
 	// Note: you may need additional member variables
 	glm::mat4 view_matrix = glm::mat4(1.0);
 	glm::mat4 projection_matrix;

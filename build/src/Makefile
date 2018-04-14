@@ -233,6 +233,33 @@ terrain_generator.cc.s:
 	cd /v/filer5b/tmpclass/kenzhu/CG/Minecraft/build && $(MAKE) -f src/CMakeFiles/minecraft.dir/build.make src/CMakeFiles/minecraft.dir/terrain_generator.cc.s
 .PHONY : terrain_generator.cc.s
 
+tictoc.o: tictoc.c.o
+
+.PHONY : tictoc.o
+
+# target to build an object file
+tictoc.c.o:
+	cd /v/filer5b/tmpclass/kenzhu/CG/Minecraft/build && $(MAKE) -f src/CMakeFiles/minecraft.dir/build.make src/CMakeFiles/minecraft.dir/tictoc.c.o
+.PHONY : tictoc.c.o
+
+tictoc.i: tictoc.c.i
+
+.PHONY : tictoc.i
+
+# target to preprocess a source file
+tictoc.c.i:
+	cd /v/filer5b/tmpclass/kenzhu/CG/Minecraft/build && $(MAKE) -f src/CMakeFiles/minecraft.dir/build.make src/CMakeFiles/minecraft.dir/tictoc.c.i
+.PHONY : tictoc.c.i
+
+tictoc.s: tictoc.c.s
+
+.PHONY : tictoc.s
+
+# target to generate assembly for a file
+tictoc.c.s:
+	cd /v/filer5b/tmpclass/kenzhu/CG/Minecraft/build && $(MAKE) -f src/CMakeFiles/minecraft.dir/build.make src/CMakeFiles/minecraft.dir/tictoc.c.s
+.PHONY : tictoc.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -254,6 +281,9 @@ help:
 	@echo "... terrain_generator.o"
 	@echo "... terrain_generator.i"
 	@echo "... terrain_generator.s"
+	@echo "... tictoc.o"
+	@echo "... tictoc.i"
+	@echo "... tictoc.s"
 .PHONY : help
 
 

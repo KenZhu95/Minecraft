@@ -9,24 +9,33 @@
 #include <cmath>
 #include <cerrno>
 #include <cfenv>
+#include <unordered_map>
+#include <map>
 
 class TerrainGenerator {
 public:
 	TerrainGenerator();
 	~TerrainGenerator();
 	glm::vec3 center_position;
+	int start_x;
+	int start_z;
 	float side_length;
-	float max_height = 20.0f;
+	float max_height = 15.0f;
 	void getCenterFromEye(glm::vec3 eye_center) {
 		center_position = glm::vec3(eye_center);
 	}
 	std::vector<glm::vec3> heights;
-	void generateHeights();
+	int height_buffer[101][101];
+	int append_buffer[101][101];
+	//void generateHeights();
 	void generatePerlinHeights();
 	void setSideLength(float length) {
 		side_length = length;
 	}
-	int center_index = 0;
+	float center_height_lb = 0;
+	float center_height_rb = 0;
+	float center_height_lt = 0;
+	float center_height_rt = 0;
 	void initialize();
 
 };
